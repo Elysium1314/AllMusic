@@ -76,6 +76,7 @@ public class AllMusicHud {
     private HudPosObj save;
     private float lyricState = 0.0f;
     private long lyricTime = -1;
+    private int lyricWidth;
     private int pgOffset;
     private float picScale;
     private BufferedImage bg2;
@@ -235,6 +236,24 @@ public class AllMusicHud {
         if (save == null || ktv == null || lyricTime == -1) return;
         lyricTime += 10;
         kUpdate();
+        updateKtvOffset();
+    }
+
+    private void updateKtvOffset() {
+        if (ktv == null || save == null || lyricWidth <= 0) {
+            lyricRender.clearKtvOffset();
+            lyricKtvRender.clearKtvOffset();
+            return;
+        }
+
+        float offset = 0;
+        int maxWidth = save.lyric.maxWidth;
+        if (maxWidth > 0 && lyricWidth > maxWidth) {
+            offset = (lyricWidth - maxWidth) * lyricState;
+        }
+
+        lyricRender.setKtvOffset(offset);
+        lyricKtvRender.setKtvOffset(offset);
     }
 
     private void loopTick() {
@@ -508,6 +527,8 @@ public class AllMusicHud {
                     allWidth = Math.max(allWidth, AllMusicCore.bridge.getTextWidth(item));
                 }
 
+                lyricWidth = allWidth;
+
                 lyricKtvRender.resize(allWidth, allHeight);
                 lyricKtvRender.use();
                 for (String item : temp) {
@@ -519,6 +540,7 @@ public class AllMusicHud {
                 }
                 lyricKtvRender.unUse();
             } else {
+                lyricWidth = 0;
                 lyricKtvRender.clear();
             }
 
@@ -612,6 +634,10 @@ public class AllMusicHud {
     public void setKtv(long time, KtvLyricObj pack2) {
         ktv = pack2;
         lyricTime = time;
+        if (pack2 == null) {
+            lyricRender.clearKtvOffset();
+            lyricKtvRender.clearKtvOffset();
+        }
     }
 
     public void setTime(long time, long now) {

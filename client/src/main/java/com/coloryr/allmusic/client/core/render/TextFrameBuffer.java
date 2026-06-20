@@ -11,6 +11,10 @@ public abstract class TextFrameBuffer {
     protected int nowWidth, nowHeight;
     protected long offsetX;
     protected boolean isDraw;
+    /**
+     * KTV模式下的强制滚动偏移，>=0 时优先使用
+     */
+    protected float ktvOffset = -1;
 
     // 最大公约数（GCD）
     public static long gcd(long a, long b) {
@@ -57,6 +61,30 @@ public abstract class TextFrameBuffer {
         if (offsetX > temp) {
             offsetX = 0;
         }
+    }
+
+    /**
+     * 设置KTV模式下的强制滚动偏移
+     */
+    public void setKtvOffset(float offset) {
+        this.ktvOffset = offset;
+    }
+
+    /**
+     * 清除KTV模式下的强制滚动偏移，恢复默认滚动
+     */
+    public void clearKtvOffset() {
+        this.ktvOffset = -1;
+    }
+
+    /**
+     * 获取当前应使用的水平滚动偏移
+     */
+    protected float getOffset(TextItem item) {
+        if (ktvOffset >= 0) {
+            return ktvOffset;
+        }
+        return offsetX % item.textWidth;
     }
 
     public static class TextItem {

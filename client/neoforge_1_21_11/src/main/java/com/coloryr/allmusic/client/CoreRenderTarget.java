@@ -203,7 +203,7 @@ public class CoreRenderTarget extends TextFrameBuffer {
         for (var item : texts) {
             Point2f point = AllMusicHud.getPos(Math.min(maxWidth, item.textWidth), item.textHeight, x, y, dir);
 
-            drawLoop(alpha, point.x, point.y + item.y, 0, item.y, item.textWidth, item.textHeight, maxWidth, offsetX % item.textWidth, item.scale);
+            drawLoop(alpha, point.x, point.y + item.y, 0, item.y, item.textWidth, item.textHeight, maxWidth, getOffset(item) % item.textWidth, item.scale);
         }
     }
 
