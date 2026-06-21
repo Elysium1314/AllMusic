@@ -28,8 +28,12 @@ public class CommandSearchApi extends ACommand {
         }
 
         // args 应该是：["searchapi", "api名", "歌曲名"]
-        if (args.length < 3) {
+        if (args.length < 2) {
             AllMusic.side.sendMessage(sender, AllMusic.getMessage().musicPlay.error2);
+            return;
+        }
+        if (args.length < 3) {
+            AllMusic.side.sendMessage(sender, AllMusic.getMessage().search.emptySearch);
             return;
         }
 
