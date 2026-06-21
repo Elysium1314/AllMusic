@@ -107,7 +107,7 @@ public class CommandEX {
         String apiname = args[0];
 
         if (!AllMusic.MUSIC_APIS.containsKey(apiname)) {
-            AllMusic.side.sendMessage(sender, "不存在的音乐源：" + apiname);
+            AllMusic.side.sendMessage(sender, AllMusic.getMessage().musicPlay.error2);
             return;
         }
 
