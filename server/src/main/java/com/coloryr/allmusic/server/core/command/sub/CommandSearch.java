@@ -21,6 +21,11 @@ public class CommandSearch extends ACommand {
             return;
         }
 
+        if (args.length < 2) {
+            AllMusic.side.sendMessage(sender, AllMusic.getMessage().search.emptySearch);
+            return;
+        }
+
         AllMusic.side.sendMessage(sender, AllMusic.getMessage().search.startSearch);
         CommandEX.searchMusic(sender, name, args, false);
     }

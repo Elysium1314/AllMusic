@@ -127,7 +127,7 @@ AllMusic不会内置音乐api，你想要正常使用需要自己安装
 - /music mute 不再参与点歌，再输入一次恢复
 - /music mute list 不接收空闲列表点歌，再输入一次恢复
 - /music search [歌名] 搜索歌曲
-- /music search [音乐API] [歌名] 搜索歌曲
+- /music searchapi [音乐API] [歌名] 搜索歌曲
 - /music select [序列] 选择歌曲
 - /music nextpage 切换下一页歌曲搜索结果
 - /music lastpage 切换上一页歌曲搜索结果

@@ -5,6 +5,10 @@ import com.coloryr.allmusic.server.core.command.ACommand;
 import com.coloryr.allmusic.server.core.command.CommandEX;
 import com.coloryr.allmusic.server.core.command.PermissionList;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class CommandSearchApi extends ACommand {
     @Override
     public void execute(Object sender, String name, String[] args) {
@@ -24,8 +28,12 @@ public class CommandSearchApi extends ACommand {
         }
 
         // args 应该是：["searchapi", "api名", "歌曲名"]
-        if (args.length < 3) {
+        if (args.length < 2) {
             AllMusic.side.sendMessage(sender, AllMusic.getMessage().musicPlay.error2);
+            return;
+        }
+        if (args.length < 3) {
+            AllMusic.side.sendMessage(sender, AllMusic.getMessage().search.emptySearch);
             return;
         }
 
@@ -35,5 +43,13 @@ public class CommandSearchApi extends ACommand {
 
         AllMusic.side.sendMessage(sender, AllMusic.getMessage().search.startSearch);
         CommandEX.searchMusicApi(sender, name, newArgs, false);
+    }
+
+    @Override
+    public List<String> tab(Object player, String name, String[] args, int index) {
+        if (index == 1 && args.length <= index + 1) {
+            return new ArrayList<>(AllMusic.MUSIC_APIS.keySet());
+        }
+        return Collections.emptyList();
     }
 }
