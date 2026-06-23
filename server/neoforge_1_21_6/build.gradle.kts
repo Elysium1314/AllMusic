@@ -25,7 +25,7 @@ dependencies {
 
 tasks {
     processResources {
-        filesMatching("META-INF/mods.toml") {
+        filesMatching("META-INF/neoforge.mods.toml") {
             expand("version" to project.version)
         }
     }

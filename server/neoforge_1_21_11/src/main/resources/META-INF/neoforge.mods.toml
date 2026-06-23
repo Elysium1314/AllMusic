@@ -4,6 +4,15 @@ license = "GPL-3.0"
 issueTrackerURL = "https://github.com/Coloryr/AllMusic/issues"
 
 [[mods]]
+modId = "allmusic"
+version = "${version}"
+displayName = "AllMusic Server"
+displayURL = "https://github.com/Coloryr/AllMusic/"
+logoFile = "icon.png"
+authors = "Color_yr"
+description = '''AllMusic Server Mod'''
+
+[[mods]]
 modId = "allmusic_server"
 version = "${version}"
 displayName = "AllMusic Server"
