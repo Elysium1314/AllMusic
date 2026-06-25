@@ -111,6 +111,13 @@ public class TexRender extends TextureRender {
 
     @Override
     public void drawPic(float x, float y, float width, float height, HudPosType dir, float alpha) {
+        RenderSystem.setShaderTexture(0, sourceTexture.getId());
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.depthFunc(GL30.GL_ALWAYS);
+
         Point2f point = AllMusicHud.getPos(width, height, x, y, dir);
 
         float w1 = width / 2;
