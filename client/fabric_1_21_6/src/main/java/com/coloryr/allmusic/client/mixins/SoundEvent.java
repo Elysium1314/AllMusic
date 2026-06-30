@@ -18,7 +18,7 @@ public class SoundEvent {
         if (AllMusicCore.isPlay()) {
             SoundSource data = soundInstance.getSource();
             switch (data) {
-                case RECORDS, MUSIC -> cir.cancel();
+                case RECORDS, MUSIC -> cir.setReturnValue(SoundEngine.PlayResult.NOT_STARTED);
             }
         }
     }
