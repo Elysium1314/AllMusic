@@ -58,6 +58,7 @@ include(":server:velocity")
 include(":onejar")
 
 include(":onejar:fabric_1_16_5")
+include(":onejar:fabric_1_20_1")
 
 pluginManagement {
     repositories {

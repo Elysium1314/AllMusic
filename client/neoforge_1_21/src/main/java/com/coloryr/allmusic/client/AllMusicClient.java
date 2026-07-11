@@ -8,6 +8,7 @@ import com.coloryr.allmusic.client.core.render.TextureRender;
 import com.coloryr.allmusic.comm.AllMusicInit;
 import com.coloryr.allmusic.comm.MusicCodec;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -36,6 +37,8 @@ import java.nio.charset.StandardCharsets;
 public class AllMusicClient implements IPayloadHandler<MusicCodec>, AllMusicBridge {
     public static final String MODID = "allmusic_client";
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
+
+    public static GuiGraphics context;
 
     @SubscribeEvent
     public static void setup(final FMLClientSetupEvent event) {
@@ -98,7 +101,7 @@ public class AllMusicClient implements IPayloadHandler<MusicCodec>, AllMusicBrid
 
     @Override
     public TextFrameBuffer makeTextRender(String name) {
-        return new CoreRenderTarget();
+        return new CoreRenderTarget(name);
     }
 
     @Override
@@ -169,6 +172,7 @@ public class AllMusicClient implements IPayloadHandler<MusicCodec>, AllMusicBrid
         @SubscribeEvent
         public static void onRenderOverlay(RenderGuiLayerEvent.Post e) {
             if (e.getName().equals(VanillaGuiLayers.CAMERA_OVERLAYS)) {
+                context= e.getGuiGraphics();
                 AllMusicCore.hudUpdate();
             }
         }

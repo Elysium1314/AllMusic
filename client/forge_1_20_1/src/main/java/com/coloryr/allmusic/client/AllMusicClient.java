@@ -6,6 +6,7 @@ import com.coloryr.allmusic.client.core.render.PictureFrameBuffer;
 import com.coloryr.allmusic.client.core.render.TextFrameBuffer;
 import com.coloryr.allmusic.client.core.render.TextureRender;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -36,6 +37,8 @@ public class AllMusicClient implements AllMusicBridge {
     public static final String MODID = "allmusic_client";
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
     private static final ResourceLocation channel = new ResourceLocation("allmusic", "channel");
+
+    public static GuiGraphics context;
 
     public AllMusicClient() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -124,6 +127,7 @@ public class AllMusicClient implements AllMusicBridge {
     @SubscribeEvent
     public void onRenderOverlay(RenderGuiOverlayEvent.Pre e) {
         if (e.getOverlay().id() == VanillaGuiOverlay.PORTAL.id()) {
+            context = e.getGuiGraphics();
             AllMusicCore.hudUpdate();
         }
     }
@@ -135,7 +139,7 @@ public class AllMusicClient implements AllMusicBridge {
 
     @Override
     public TextFrameBuffer makeTextRender(String name) {
-        return new CoreRenderTarget();
+        return new CoreRenderTarget(name);
     }
 
     @Override

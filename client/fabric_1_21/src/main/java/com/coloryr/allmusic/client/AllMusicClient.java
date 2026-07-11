@@ -27,7 +27,7 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("allmusic", "channel");
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
-    private static GuiGraphics context;
+    public static GuiGraphics context;
 
     public static void update(GuiGraphics draw) {
         context = draw;
@@ -48,12 +48,6 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     public int getFontHeight() {
         return Minecraft.getInstance().font.lineHeight;
-    }
-
-    public void drawText(String item, int x, int y, int color, boolean shadow) {
-        var hud = Minecraft.getInstance().font;
-        Component component = MiniMessage.parse(item);
-        context.drawString(hud, component, x, y, color, shadow);
     }
 
     public void sendMessage(String data) {
@@ -79,7 +73,7 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     @Override
     public TextFrameBuffer makeTextRender(String name) {
-        return new CoreRenderTarget();
+        return new CoreRenderTarget(name);
     }
 
     @Override

@@ -26,10 +26,10 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     public static final ResourceLocation ID = new ResourceLocation("allmusic", "channel");
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
-    public static GuiGraphics graphics;
+    public static GuiGraphics context;
 
-    public static void update(GuiGraphics graphics) {
-        AllMusicClient.graphics = graphics;
+    public static void update(GuiGraphics context) {
+        AllMusicClient.context = context;
         AllMusicCore.hudUpdate();
     }
 
@@ -72,7 +72,7 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     @Override
     public TextFrameBuffer makeTextRender(String name) {
-        return new CoreRenderTarget();
+        return new CoreRenderTarget(name);
     }
 
     @Override

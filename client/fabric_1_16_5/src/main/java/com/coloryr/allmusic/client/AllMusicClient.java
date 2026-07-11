@@ -31,10 +31,8 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
 
-    /** 当前帧的 PoseStack，由 GuiShow mixin 注入 */
     public static PoseStack context;
 
-    /** 由 HUD 渲染 mixin 调用，缓存当前帧的 PoseStack */
     public static void update(PoseStack matrices) {
         context = matrices;
     }

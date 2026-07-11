@@ -5,6 +5,7 @@ import com.coloryr.allmusic.client.core.AllMusicCore;
 import com.coloryr.allmusic.client.core.render.PictureFrameBuffer;
 import com.coloryr.allmusic.client.core.render.TextFrameBuffer;
 import com.coloryr.allmusic.client.core.render.TextureRender;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -39,6 +40,12 @@ public class AllMusicClient implements AllMusicBridge {
     public static final String MODID = "allmusic_client";
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
     private static final ResourceLocation channel = new ResourceLocation("allmusic", "channel");
+
+    public static PoseStack context;
+
+    public static void update(PoseStack matrices) {
+        context = matrices;
+    }
 
     public AllMusicClient() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -112,6 +119,7 @@ public class AllMusicClient implements AllMusicBridge {
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Pre e) {
         if (e.getType() == RenderGameOverlayEvent.ElementType.PORTAL) {
+            update(e.getMatrixStack());
             AllMusicCore.hudUpdate();
         }
     }
@@ -139,7 +147,7 @@ public class AllMusicClient implements AllMusicBridge {
 
     @Override
     public TextFrameBuffer makeTextRender(String name) {
-        return new CoreRenderTarget();
+        return new CoreRenderTarget(name);
     }
 
     @Override

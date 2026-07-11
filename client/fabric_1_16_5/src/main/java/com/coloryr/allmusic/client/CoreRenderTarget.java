@@ -113,9 +113,10 @@ public class CoreRenderTarget extends TextFrameBuffer {
         if (texts.isEmpty()) {
             return;
         }
-        if (line >= texts.size() || line >= entries.size()) {
+        if (line >= texts.size()) {
             return;
         }
+        if (line >= entries.size()) return;
         PoseStack matrices = AllMusicClient.context;
         if (matrices == null) return;
         Font font = Minecraft.getInstance().font;
@@ -153,11 +154,12 @@ public class CoreRenderTarget extends TextFrameBuffer {
 
             if (maxWidth != -1 && entry.width > maxWidth) {
                 float maxOffset = entry.width - maxWidth;
-                int texOffset = (int) (maxOffset * state);
+                float texOffset = maxOffset * state;
                 int revealWidth = (int) (maxWidth * state);
 
+                enableScissor(drawX, drawY, maxWidth, entry.height);
                 enableScissor(drawX, drawY, revealWidth, entry.height);
-                drawString(font, matrices, entry, drawX - texOffset, drawY, finalColor);
+                drawString(font, matrices, entry, drawX - (int) texOffset, drawY, finalColor);
                 disableScissor();
             } else {
                 int revealWidth = (int) (entry.width * state);

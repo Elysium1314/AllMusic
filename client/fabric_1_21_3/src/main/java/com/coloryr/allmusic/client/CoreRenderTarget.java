@@ -170,7 +170,9 @@ public class CoreRenderTarget extends TextFrameBuffer {
     }
 
     private static int applyAlpha(int color, float alpha) {
-        int a = Math.clamp((int) (alpha * 255), 0, 255);
+        int a = (int) (alpha * 255);
+        if (a < 0) a = 0;
+        if (a > 255) a = 255;
         return (color & 0x00FFFFFF) | (a << 24);
     }
 }

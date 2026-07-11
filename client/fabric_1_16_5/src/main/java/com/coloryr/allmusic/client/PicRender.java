@@ -48,8 +48,7 @@ public class PicRender extends PictureFrameBuffer {
     public void draw(boolean rotate, int size, float x, float y, int ang, HudPosType dir, float alpha) {
         Point2f point = AllMusicHud.getPos(size, size, x, y, dir);
 
-        RenderSystem.setShaderTexture(0, rotate ? rotateTexture.getId() : sourceTexture.getId());
-        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        RenderSystem.bindTexture(rotate ? rotateTexture.getId() : sourceTexture.getId());
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.depthFunc(GL30.GL_ALWAYS);
