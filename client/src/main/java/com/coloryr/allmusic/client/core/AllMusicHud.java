@@ -77,9 +77,10 @@ public class AllMusicHud {
     private float lyricState = 0.0f;
     private long lyricTime = -1;
     private int lyricWidth;
-    private int pgOffset;
-    private float picScale;
+    private final int pgOffset;
+    private final float picScale;
     private BufferedImage bg2;
+    private boolean isRun;
 
     /**
      * 是否有图片
@@ -104,6 +105,8 @@ public class AllMusicHud {
 
     public AllMusicHud(int size) {
         this.size = size;
+
+        isRun = true;
 
         Thread thread = new Thread(this::run);
         thread.setName("allmusic_pic");
@@ -144,6 +147,10 @@ public class AllMusicHud {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void stop() {
+        isRun = false;
     }
 
     public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
@@ -376,10 +383,22 @@ public class AllMusicHud {
      * 网络线程
      */
     private void run() {
+        if (isRun) {
+            return;
+        }
         while (true) {
             try {
+                if (!isRun) {
+                    return;
+                }
                 semaphore.acquire();
+                if (!isRun) {
+                    return;
+                }
                 while (!urlList.isEmpty()) {
+                    if (!isRun) {
+                        return;
+                    }
                     String picUrl = urlList.poll();
                     if (picUrl != null) {
                         loadPic(picUrl);

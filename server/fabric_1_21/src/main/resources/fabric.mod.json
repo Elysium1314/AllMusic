@@ -16,9 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.coloryr.allmusic.comm.AllMusicInit"
-    ],
-    "server": [
+      "com.coloryr.allmusic.comm.AllMusicInit",
       "com.coloryr.allmusic.server.AllMusicServer"
     ]
   },

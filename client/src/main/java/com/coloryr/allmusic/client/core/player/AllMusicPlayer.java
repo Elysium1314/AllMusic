@@ -9,7 +9,6 @@ import com.coloryr.allmusic.client.core.player.decoder.mp3.Mp3Decoder;
 import com.coloryr.allmusic.client.core.player.decoder.ogg.OggDecoder;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.core5.http.ConnectionClosedException;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.io.CloseMode;
 import org.lwjgl.BufferUtils;
@@ -18,8 +17,6 @@ import org.lwjgl.openal.AL10;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -33,7 +30,7 @@ public class AllMusicPlayer extends InputStream {
 
     private final Stack<PlayTaskObj> tasks = new Stack<>();
     private final Semaphore semaphore = new Semaphore(0);
-    private final Semaphore semaphore1 = new Semaphore(0);
+    private final Semaphore semaphoreReload = new Semaphore(0);
 
     private PlayTaskObj nowTask;
     private CloseableHttpResponse response;
@@ -44,8 +41,6 @@ public class AllMusicPlayer extends InputStream {
     private boolean isPlay = false;
     private boolean wait = false;
     private int index = -1;
-    private int frequency;
-    private int channels;
     private IntBuffer source;
     private long local;
     private boolean isRun;
@@ -57,17 +52,24 @@ public class AllMusicPlayer extends InputStream {
             this.source = source;
             new Thread(this::run, "allmusic_run").start();
             scheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduler.scheduleAtFixedRate(this::run1, 0, 10, TimeUnit.MILLISECONDS);
+            scheduler.scheduleAtFixedRate(this::timerTick, 0, 10, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void stop() {
+        isRun = false;
+        semaphore.release();
+        semaphoreReload.release();
+        scheduler.close();
     }
 
     public void setChat() {
         isChat = true;
     }
 
-    public void run1() {
+    public void timerTick() {
         if (isPlay && nowTask != null) {
             nowTask.time += 10;
         }
@@ -134,7 +136,13 @@ public class AllMusicPlayer extends InputStream {
         isRun = true;
         while (true) {
             try {
+                if (!isRun) {
+                    return;
+                }
                 semaphore.acquire();
+                if (!isRun) {
+                    return;
+                }
 
                 if (index == -1) {
                     index = AL10.alGenSources();
@@ -182,8 +190,8 @@ public class AllMusicPlayer extends InputStream {
                 }
 
                 isPlay = true;
-                frequency = decoder.getOutputFrequency();
-                channels = decoder.getOutputChannels();
+                int frequency = decoder.getOutputFrequency();
+                int channels = decoder.getOutputChannels();
                 if (channels != 1 && channels != 2) continue;
                 if (nowTask.time != 0) {
                     decoder.set(nowTask.time);
@@ -266,7 +274,10 @@ public class AllMusicPlayer extends InputStream {
 
                 if (!reload) {
                     wait = true;
-                    if (semaphore1.tryAcquire(500, TimeUnit.MILLISECONDS)) {
+                    if (semaphoreReload.tryAcquire(500, TimeUnit.MILLISECONDS)) {
+                        if (!isRun) {
+                            break;
+                        }
                         if (reload) {
                             tasks.push(nowTask);
                             semaphore.release();
@@ -298,7 +309,7 @@ public class AllMusicPlayer extends InputStream {
     public void tick() {
         if (wait) {
             wait = false;
-            semaphore1.release();
+            semaphoreReload.release();
         }
     }
 

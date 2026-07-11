@@ -2,6 +2,9 @@ plugins {
     id("fabric-loom") version Versions.fabricLoom
 }
 
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
+
 // 直接引用 client 和 server 模块的源码目录，无需手动复制
 val clientSourceDir = project(":client:fabric_1_20_1").projectDir.resolve("src/main/java")
 val serverSourceDir = project(":server:fabric_1_20_1").projectDir.resolve("src/main/java")

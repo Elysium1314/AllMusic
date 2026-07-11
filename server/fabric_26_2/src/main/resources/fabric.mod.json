@@ -16,9 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.coloryr.allmusic.comm.AllMusicInit"
-    ],
-    "server": [
+      "com.coloryr.allmusic.comm.AllMusicInit",
       "com.coloryr.allmusic.server.AllMusicServer"
     ]
   },
@@ -31,7 +29,8 @@
   "depends": {
     "fabricloader": ">=0.19.3",
     "minecraft": ">=26.2",
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "adventure-platform-fabric": ">=7.0.0"
   },
   "suggests": {
   }

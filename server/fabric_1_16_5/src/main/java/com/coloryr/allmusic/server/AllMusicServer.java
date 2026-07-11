@@ -13,14 +13,12 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 
 public class AllMusicServer implements ModInitializer {
-    public static final Logger LOGGER = LogManager.getLogger("AllMusic Server");
     public static final ResourceLocation ID = new ResourceLocation("allmusic", "channel");
     public static MinecraftServer server;
     public static FabricServerAudiences audiences;
 
     @Override
     public void onInitialize() {
-
         AllMusic.log = new LogFabric();
         AllMusic.side = new SideFabric();
 

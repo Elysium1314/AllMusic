@@ -11,7 +11,6 @@ dependencies {
 
     implementation("net.fabricmc.fabric-api:fabric-api:0.152.1+26.2")
 
-//    compileOnly("icyllis.modernui:ModernUI-Fabric:26.1.2-3.13.0.4")
     compileOnly("de.maxhenkel.voicechat:voicechat-api:2.6.0")
 }
 

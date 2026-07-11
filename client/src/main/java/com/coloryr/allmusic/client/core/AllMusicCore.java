@@ -134,6 +134,15 @@ public class AllMusicCore {
         ctx.updateLoggers(config);
     }
 
+    public static void stop() {
+        if (player != null) {
+            player.stop();
+        }
+        if (hud != null) {
+            hud.stop();
+        }
+    }
+
     /**
      * 初始化核心
      *

@@ -9,6 +9,7 @@ import com.coloryr.allmusic.comm.MusicCodec;
 import com.mojang.blaze3d.textures.GpuTexture;
 import com.mojang.blaze3d.textures.GpuTextureView;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -26,9 +27,7 @@ import java.nio.charset.StandardCharsets;
 
 public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
     public static final String MODID = "allmusic_client";
-    public static final Identifier ID = Identifier.fromNamespaceAndPath("allmusic", "channel");
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
-    public static boolean modui;
     public static GuiGraphicsExtractor context;
 
     public static void update(GuiGraphicsExtractor draw) {
@@ -117,17 +116,10 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     @Override
     public void onInitializeClient() {
-        ClientPlayNetworking.registerGlobalReceiver(MusicCodec.ID, (pack, handler) -> {
-            AllMusicCore.packDo(pack.pack());
-        });
-
-        if (FabricLoader.getInstance().isModLoaded("modernui")) {
-            modui = true;
-        }
-        if (FabricLoader.getInstance().isModLoaded("modernui")) {
-            modui = true;
-        }
+        ClientPlayNetworking.registerGlobalReceiver(MusicCodec.ID, (pack, handler) -> AllMusicCore.packDo(pack.pack()));
 
         AllMusicCore.init(FabricLoader.getInstance().getConfigDir(), this);
+
+        ClientLifecycleEvents.CLIENT_STOPPING.register((a) -> AllMusicCore.stop());
     }
 }

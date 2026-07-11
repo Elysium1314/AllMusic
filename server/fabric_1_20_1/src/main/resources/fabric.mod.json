@@ -15,7 +15,7 @@
   "icon": "assets/allmusic_server/icon.png",
   "environment": "*",
   "entrypoints": {
-    "server": [
+    "main": [
       "com.coloryr.allmusic.server.AllMusicServer"
     ]
   },

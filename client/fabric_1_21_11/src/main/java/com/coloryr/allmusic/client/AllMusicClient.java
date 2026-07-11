@@ -7,6 +7,7 @@ import com.coloryr.allmusic.client.core.render.TextFrameBuffer;
 import com.coloryr.allmusic.client.core.render.TextureRender;
 import com.coloryr.allmusic.comm.MusicCodec;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
@@ -119,5 +120,7 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
         });
 
         AllMusicCore.init(FabricLoader.getInstance().getConfigDir(), this);
+
+        ClientLifecycleEvents.CLIENT_STOPPING.register((a) -> AllMusicCore.stop());
     }
 }
