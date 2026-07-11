@@ -52,7 +52,7 @@ tasks {
     }
 
     shadowJar {
-        archiveFileName.set("[fabric-26.2]AllMusic_Server-${project.version}.jar")
+        archiveFileName.set("[fabric-26.2]AllMusic-${project.version}.jar")
         destinationDirectory.set(file("${parent!!.projectDir}/../build"))
 
 //        relocate("net.kyori", "com.coloryr.allmusic.libs.net.kyori")

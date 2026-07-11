@@ -18,7 +18,7 @@
     "main": [
       "com.coloryr.allmusic.comm.AllMusicInit",
       "com.coloryr.allmusic.server.AllMusicServer"
-    ],
+    ]
   },
   "mixins": [
     {

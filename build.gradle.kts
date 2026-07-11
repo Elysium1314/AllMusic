@@ -12,7 +12,7 @@ allprojects {
     apply(plugin = "com.gradleup.shadow")
 
     group = "com.coloryr"
-    version = "4.0.3"
+    version = "4.1.0"
 
     // 设置项目JDK版本
     java.sourceCompatibility = JavaVersion.VERSION_1_8
@@ -64,4 +64,14 @@ allprojects {
             }
         }
     }
+}
+
+tasks.register("buildAll") {
+    group = "build"
+    dependsOn(rootProject.subprojects.filter { it.path.startsWith(":client:") }
+        .map { it.tasks.named("build") })
+    dependsOn(rootProject.subprojects.filter { it.path.startsWith(":server:") }
+        .map { it.tasks.named("build") })
+    dependsOn(rootProject.subprojects.filter { it.path.startsWith(":onejar:") }
+        .map { it.tasks.named("build") })
 }

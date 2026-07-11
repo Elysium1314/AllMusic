@@ -27,7 +27,7 @@ dependencies {
     compileOnly("org.apache.logging.log4j:log4j-core:2.25.4")
 }
 
-tasks.register("buildOnJar") {
+tasks.register("buildOneJar") {
     group = "build"
     dependsOn(rootProject.subprojects.filter { it.path.startsWith(":onejar:") }
         .map { it.tasks.named("build") })
