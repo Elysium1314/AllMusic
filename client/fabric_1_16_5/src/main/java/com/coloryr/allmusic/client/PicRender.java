@@ -12,8 +12,8 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.io.ByteArrayInputStream;
@@ -48,12 +48,8 @@ public class PicRender extends PictureFrameBuffer {
     public void draw(boolean rotate, int size, float x, float y, int ang, HudPosType dir, float alpha) {
         Point2f point = AllMusicHud.getPos(size, size, x, y, dir);
 
-        RenderSystem.bindTexture(rotate ? rotateTexture.getId() : sourceTexture.getId());
-        RenderSystem.enableTexture();
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.depthFunc(GL30.GL_ALWAYS);
-
+        RenderSystem.setShaderTexture(0, rotate ? rotateTexture.getId() : sourceTexture.getId());
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.depthFunc(GL30.GL_ALWAYS);
@@ -79,7 +75,7 @@ public class PicRender extends PictureFrameBuffer {
         float v1 = 1;
 
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        bufferBuilder.begin(7, DefaultVertexFormat.POSITION_COLOR_TEX);
         bufferBuilder.vertex(matrix, x0, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u0, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y0, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v0).endVertex();

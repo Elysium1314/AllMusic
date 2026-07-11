@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "allmusic_server",
+  "id": "allmusic_client",
   "version": "${version}",
-  "name": "AllMusic Server",
-  "description": "AllMusic Server Mod",
+  "name": "AllMusic Client",
+  "description": "AllMusic Client Mod",
   "authors": [
     "Color_yr"
   ],
@@ -12,7 +12,7 @@
     "sources": "https://github.com/Coloryr/AllMusic"
   },
   "license": "GPL-3.0",
-  "icon": "assets/allmusic_server/icon.png",
+  "icon": "assets/allmusic/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -21,9 +21,13 @@
     ],
     "preLaunch": [
       "com.coloryr.allmusic.server.adventure.impl.AdventurePrelaunch"
+    ],
+    "client": [
+      "com.coloryr.allmusic.client.AllMusicClient"
     ]
   },
   "mixins": [
+    "allmusic_client.mixins.json",
     "allmusic_server.mixins.json",
     "adventure-platform-fabric.accessor.mixins.json",
     "adventure-platform-fabric.mixins.json"
@@ -33,6 +37,5 @@
     "fabric": "*",
     "minecraft": ">=1.16"
   },
-  "suggests": {
-  }
+  "suggests": {}
 }

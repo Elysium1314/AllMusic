@@ -6,6 +6,7 @@ import com.coloryr.allmusic.client.core.render.PictureFrameBuffer;
 import com.coloryr.allmusic.client.core.render.TextFrameBuffer;
 import com.coloryr.allmusic.client.core.render.TextureRender;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -29,6 +30,14 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
     public static final ResourceLocation ID = new ResourceLocation("allmusic", "channel");
 
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Client");
+
+    /** 当前帧的 PoseStack，由 GuiShow mixin 注入 */
+    public static PoseStack context;
+
+    /** 由 HUD 渲染 mixin 调用，缓存当前帧的 PoseStack */
+    public static void update(PoseStack matrices) {
+        context = matrices;
+    }
 
     public int getScreenWidth() {
         return Minecraft.getInstance().getWindow().getGuiScaledWidth();
@@ -69,7 +78,7 @@ public class AllMusicClient implements ClientModInitializer, AllMusicBridge {
 
     @Override
     public TextFrameBuffer makeTextRender(String name) {
-        return new CoreRenderTarget();
+        return new CoreRenderTarget(name);
     }
 
     @Override

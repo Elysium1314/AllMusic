@@ -7,13 +7,9 @@ import com.coloryr.allmusic.codec.HudPosType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
 public class CoreRenderTarget extends TextFrameBuffer {
     private final Framebuffer target;
@@ -25,7 +21,8 @@ public class CoreRenderTarget extends TextFrameBuffer {
 
     @Override
     public void resize(int width, int height) {
-        ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+        Minecraft mc = Minecraft.getMinecraft();
+        ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 
         nowWidth = (width * scaledresolution.getScaledWidth());
         nowHeight = (height * scaledresolution.getScaledHeight());
@@ -42,8 +39,6 @@ public class CoreRenderTarget extends TextFrameBuffer {
         clear();
         target.framebufferClear();
         target.bindFramebuffer(true);
-
-//        GlStateManager.ortho(0.0F, target.framebufferWidth, target.framebufferHeight, 0.0F, 1000.0F, 3000.0D);
     }
 
     @Override
@@ -52,8 +47,6 @@ public class CoreRenderTarget extends TextFrameBuffer {
 
         Minecraft minecraft = Minecraft.getMinecraft();
 
-//        GlStateManager.ortho(0.0D, minecraft.displayWidth, minecraft.displayHeight, 0.0D, 1000.0D, 3000.0D);
-
         Minecraft.getMinecraft().getFramebuffer().bindFramebuffer(true);
     }
 
@@ -61,7 +54,7 @@ public class CoreRenderTarget extends TextFrameBuffer {
     public void drawText(String text, int y, int color, boolean shadow) {
         Minecraft minecraft = Minecraft.getMinecraft();
 
-        ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
+        ScaledResolution scaledresolution = new ScaledResolution(minecraft, minecraft.displayWidth, minecraft.displayHeight);
 
         FontRenderer font = minecraft.fontRenderer;
 
@@ -90,9 +83,9 @@ public class CoreRenderTarget extends TextFrameBuffer {
      * @param scale  贴图缩放
      */
     private void draw(float alpha, float x, float y, float width, float height, float texX, float texY, float scale) {
-        GlStateManager.bindTexture(target.framebufferTexture);
-        GlStateManager.depthMask(false);
-        GlStateManager.enableBlend();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, target.framebufferTexture);
+        GL11.glDepthMask(false);
+        GL11.glEnable(GL11.GL_BLEND);
 
         float w = (width / 2);
         float h = (height / 2);
@@ -112,22 +105,21 @@ public class CoreRenderTarget extends TextFrameBuffer {
         float u1 = (texX + width) * scale / target.framebufferWidth;
         float v1 = 1 - ((texY + height) * scale / target.framebufferHeight);
 
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-
-        bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
-        bufferbuilder.pos(x0, y1, z).tex(u0, v1).color(1.0f, 1.0f, 1.0f, alpha).endVertex();
-        bufferbuilder.pos(x1, y1, z).tex(u1, v1).color(1.0f, 1.0f, 1.0f, alpha).endVertex();
-        bufferbuilder.pos(x1, y0, z).tex(u1, v0).color(1.0f, 1.0f, 1.0f, alpha).endVertex();
-        bufferbuilder.pos(x0, y0, z).tex(u0, v0).color(1.0f, 1.0f, 1.0f, alpha).endVertex();
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
+        tessellator.setColorRGBA_F(1.0f, 1.0f, 1.0f, alpha);
+        tessellator.addVertexWithUV(x0, y1, z, u0, v1);
+        tessellator.addVertexWithUV(x1, y1, z, u1, v1);
+        tessellator.addVertexWithUV(x1, y0, z, u1, v0);
+        tessellator.addVertexWithUV(x0, y0, z, u0, v0);
         tessellator.draw();
 
-        GlStateManager.disableBlend();
-        GlStateManager.depthMask(true);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDepthMask(true);
 
         GL11.glPopMatrix();
 
-        target.unbindFramebufferTexture();
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
     }
 
     public void drawLoop(float alpha, float x, float y,

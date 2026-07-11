@@ -4,7 +4,7 @@ import com.coloryr.allmusic.server.core.AllMusic;
 import com.coloryr.allmusic.server.core.music.PlayMusic;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.minecraft.command.ServerCommandManager;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -56,8 +56,7 @@ public class AllMusicServer {
     public void onServerStarting(FMLServerStartingEvent event) {
         server = event.getServer();
 
-        ServerCommandManager commandManager = (ServerCommandManager) server.commandManager;
-        commandManager.registerCommand(new CommandForge());
+        event.registerServerCommand(new CommandForge());
     }
 
     @Mod.EventHandler

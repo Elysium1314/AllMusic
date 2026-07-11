@@ -57,10 +57,9 @@ public class AllMusicClient implements AllMusicBridge {
             evt.getModConfigurationDirectory().mkdirs();
         }
         AllMusicCore.init(evt.getModConfigurationDirectory().toPath(), this);
-        AllMusicCore.glInit();
         MinecraftForge.EVENT_BUS.register(this);
         try {
-            Class<?> server = Class.forName("com.coloryr.allmusic.server.AllMusicForge");
+            Class<?> server = Class.forName("com.coloryr.allmusic.server.AllMusicServer");
             Field m = server.getField("channel");
             FMLEventChannel channel = (FMLEventChannel) m.get(null);
             channel.register(this);

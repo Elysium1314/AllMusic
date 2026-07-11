@@ -1,15 +1,21 @@
 package com.coloryr.allmusic.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.nio.ByteBuffer;
+import java.io.InputStream;
 import java.util.List;
 
 import com.coloryr.allmusic.client.core.AllMusicBridge;
 import com.coloryr.allmusic.client.core.AllMusicCore;
+import com.coloryr.allmusic.client.core.render.PictureFrameBuffer;
+import com.coloryr.allmusic.client.core.render.TextFrameBuffer;
+import com.coloryr.allmusic.client.core.render.TextureRender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.MinecraftForge;
@@ -67,7 +73,7 @@ public class AllMusic implements AllMusicBridge {
         List<Channel> list = sound1.allMusic_Client$getStreamingChannels();
         ChannelLWJGLOpenAL channel = (ChannelLWJGLOpenAL) list.get(list.size() - 1);
         AllMusicCore.init(new File("config").toPath(), this, channel.ALSource);
-        AllMusicCore.glInit();
+        AllMusicCore.renderInit();
     }
 
     @Mod.EventHandler
@@ -108,11 +114,6 @@ public class AllMusic implements AllMusicBridge {
         AllMusicCore.onServerQuit();
     }
 
-    @Override
-    public Object genTexture(int size) {
-        return AllMusicCore.genGLTexture(size);
-    }
-
     public int getScreenWidth() {
         Minecraft mc = Minecraft.getMinecraft();
         ScaledResolution scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
@@ -134,14 +135,56 @@ public class AllMusic implements AllMusicBridge {
     }
 
     @Override
-    public void updateTexture(Object tex, int size, ByteBuffer byteBuffer) {
-        AllMusicCore.updateGLTexture((int) tex, size, byteBuffer);
-    }
-
-    @Override
     public void stopPlayMusic() {
         Minecraft.getMinecraft().getSoundHandler().stopSounds();
         Minecraft.getMinecraft().getSoundHandler().stopSounds();
+    }
+
+    @Override
+    public TextFrameBuffer makeTextRender(String name) {
+        return new CoreRenderTarget();
+    }
+
+    @Override
+    public TextureRender makeTextureRender(String file) {
+        return new TexRender(file);
+    }
+
+    @Override
+    public PictureFrameBuffer makePictureRender(int size) {
+        return new PicRender(size);
+    }
+
+    @Override
+    public String readText(String file) {
+        try {
+            IResource resource = Minecraft.getMinecraft().getResourceManager()
+                    .getResource(new ResourceLocation("allmusic_client", file));
+            InputStream inputStream = resource.getInputStream();
+            ByteArrayOutputStream result = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                result.write(buffer, 0, length);
+            }
+            inputStream.close();
+            return result.toString("UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public InputStream readFile(String file) {
+        try {
+            IResource resource = Minecraft.getMinecraft().getResourceManager()
+                    .getResource(new ResourceLocation("allmusic_client", file));
+            return resource.getInputStream();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @SubscribeEvent

@@ -75,13 +75,11 @@ public class CoreRenderTarget extends TextFrameBuffer {
             return;
         }
 
-        int width;
-
-        if (shadow) {
-            width = font.drawShadow(new PoseStack(), component, 0, 0, color);
-        } else {
-            width = font.draw(new PoseStack(), component, 0, 0, color);
-        }
+        // 使用 drawInBatch 将文字渲染到 CoreRenderTarget 自己的 buffer，
+        // 而不是 Font 内部的 buffer。这样 endBatch() 才能正确 flush 到当前 RenderTarget（FBO）。
+        int width = font.drawInBatch(component, 0, y, color, shadow,
+                new Matrix4f(), renderBuffers.bufferSource(),
+                false, 0, 15728880);
 
         RenderSystem.disableDepthTest();
         renderBuffers.bufferSource().endBatch();
@@ -122,10 +120,11 @@ public class CoreRenderTarget extends TextFrameBuffer {
         float z = 0;
 
         // 计算贴图区域UV
+        // 注意：1.16.5 的 FBO 纹理不需要 Y 轴翻转，纹理原点在左上角
         float u0 = texX * scale / target.width;
-        float v0 = 1 - (texY * scale / target.height);
+        float v0 = texY * scale / target.height;
         float u1 = (texX + width) * scale / target.width;
-        float v1 = 1 - ((texY + height) * scale / target.height);
+        float v1 = (texY + height) * scale / target.height;
 
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);

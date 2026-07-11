@@ -13,11 +13,11 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.io.IOException;
@@ -42,8 +42,8 @@ public class TexRender extends TextureRender {
 
     @Override
     public void drawPic(float x, float y, float alpha) {
-        RenderSystem.bindTexture(sourceTexture.getId());
-        RenderSystem.enableTexture();
+        RenderSystem.setShaderTexture(0, sourceTexture.getId());
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.depthFunc(GL30.GL_ALWAYS);
@@ -64,7 +64,7 @@ public class TexRender extends TextureRender {
         float v1 = 1;
 
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        bufferBuilder.begin(7, DefaultVertexFormat.POSITION_COLOR_TEX);
         bufferBuilder.vertex(matrix, x0, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u0, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y0, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v0).endVertex();
@@ -78,8 +78,8 @@ public class TexRender extends TextureRender {
 
     @Override
     public void drawPic(float x, float y, float width, float alpha) {
-        RenderSystem.bindTexture(sourceTexture.getId());
-        RenderSystem.enableTexture();
+        RenderSystem.setShaderTexture(0, sourceTexture.getId());
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.depthFunc(GL30.GL_ALWAYS);
@@ -100,7 +100,7 @@ public class TexRender extends TextureRender {
         float v1 = 1;
 
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        bufferBuilder.begin(7, DefaultVertexFormat.POSITION_COLOR_TEX);
         bufferBuilder.vertex(matrix, x0, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u0, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y0, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v0).endVertex();
@@ -117,8 +117,8 @@ public class TexRender extends TextureRender {
     public void drawPic(float x, float y, float width, float height, HudPosType dir, float alpha) {
         Point2f point = AllMusicHud.getPos(width, height, x, y, dir);
 
-        RenderSystem.bindTexture(sourceTexture.getId());
-        RenderSystem.enableTexture();
+        RenderSystem.setShaderTexture(0, sourceTexture.getId());
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.depthFunc(GL30.GL_ALWAYS);
@@ -134,12 +134,12 @@ public class TexRender extends TextureRender {
         float y1 = h1;
         float z = 0;
         float u0 = 0;
-        float u1 = width;
+        float u1 = 1;
         float v0 = 0;
         float v1 = 1;
 
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        bufferBuilder.begin(7, DefaultVertexFormat.POSITION_COLOR_TEX);
         bufferBuilder.vertex(matrix, x0, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u0, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y1, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v1).endVertex();
         bufferBuilder.vertex(matrix, x1, y0, z).color(1.0f, 1.0f, 1.0f, alpha).uv(u1, v0).endVertex();

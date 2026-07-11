@@ -2,7 +2,7 @@ package com.coloryr.allmusic.server;
 
 import com.coloryr.allmusic.server.adventure.FabricServerAudiences;
 import com.coloryr.allmusic.server.core.AllMusic;
-import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.resources.ResourceLocation;
@@ -12,14 +12,14 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 
-public class AllMusicServer implements DedicatedServerModInitializer {
+public class AllMusicServer implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("AllMusic Server");
     public static final ResourceLocation ID = new ResourceLocation("allmusic", "channel");
     public static MinecraftServer server;
     public static FabricServerAudiences audiences;
 
     @Override
-    public void onInitializeServer() {
+    public void onInitialize() {
 
         AllMusic.log = new LogFabric();
         AllMusic.side = new SideFabric();

@@ -51,6 +51,7 @@ allprojects {
 
     afterEvaluate {
         if (plugins.hasPlugin("com.gtnewhorizons.retrofuturagradle")) return@afterEvaluate
+        if (plugins.hasPlugin("fabric-loom")) return@afterEvaluate
 
         val rfgObfAttr = Attribute.of("com.gtnewhorizons.retrofuturagradle.obfuscation", String::class.java)
         val rfgDeobfAttr = Attribute.of("rfgDeobfuscatorTransformed", Boolean::class.javaObjectType)

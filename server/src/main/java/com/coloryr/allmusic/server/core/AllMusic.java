@@ -364,6 +364,9 @@ public class AllMusic {
      * @param player 用户名
      */
     public static void joinPlay(String player) {
+        if (AllMusic.side == null) {
+            return;
+        }
         AllMusic.side.runTask(() -> joinPlayNow(player), AllMusic.config.joinDelay);
     }
 
