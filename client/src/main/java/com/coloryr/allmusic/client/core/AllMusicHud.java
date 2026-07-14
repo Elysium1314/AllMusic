@@ -383,9 +383,6 @@ public class AllMusicHud {
      * 网络线程
      */
     private void run() {
-        if (isRun) {
-            return;
-        }
         while (true) {
             try {
                 if (!isRun) {
