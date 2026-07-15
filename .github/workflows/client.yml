@@ -8,7 +8,7 @@
 name: AllMusic Client
 
 on:
-  push:
+  workflow_dispatch:
     # Sequence of patterns matched against refs/heads
     branches:
       - 'releases/**'
